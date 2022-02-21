@@ -35,7 +35,7 @@ type Generator struct {
 	fsFilesMap map[string]file
 
 	// callback eventually called after reading the file contents (for later processing)
-	PrefilterCallback func(fname string, fcontent []byte) []byte
+	PrefilterCallback func(fname string, fpath string, fcontent []byte) []byte
 }
 
 func (x *Generator) addPath(parent string, prefix string, info os.FileInfo) error {
@@ -222,7 +222,7 @@ func (x *Generator) Write(wr io.Writer) error {
 
 			// call prefilter callback
 			if x.PrefilterCallback != nil {
-				data = x.PrefilterCallback(v.info.Name(), data)
+				data = x.PrefilterCallback(v.info.Name(), v.path, data)
 			}
 
 			s := sha1.New()
